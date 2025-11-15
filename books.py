@@ -63,7 +63,28 @@ async def update_book_detail(updatedbook : Book):
         
     return {"MESSAGE " : f"No Book with {updatedbook.id} was found."}
 
-
+@app.patch("/book/updatebook/{book_id}")
+async def update_specific_book_detail(book_id : int , patchbook : BookPatch):
+    print(patchbook)
+    for book in BOOKS:
+        if book.id == book_id:
+            if patchbook.title is not None:
+                book.title = patchbook.title
+            if patchbook.author is not None:
+                book.author = patchbook.author
+                if patchbook.co_author is None:
+                    book.co_author = patchbook.author
+            if patchbook.tags is not None:
+                book.tags = patchbook.tags
+            if patchbook.price is not None:
+                book.price = patchbook.price
+            if patchbook.co_author is not None:
+                book.co_author = patchbook.co_author
+            return book
+    raise HTTPException(
+        status_code=404,
+        detail=f"No book with if {book_id} was found"
+    )
 
 @app.delete("/book/deletebook/{bookid}")
 async def delete_a_book(bookid : int):
