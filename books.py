@@ -3,6 +3,7 @@ from fastapi import FastAPI, HTTPException, Path , Query
 from typing import List,Dict, Optional
 #from prometheus_fastapi_instrumentator import Instrumentator
 from models import Book, BOOKS, checkbookid, BookPatch
+from starlette import status
 
 app = FastAPI(title="BOOKS API")
 
@@ -18,7 +19,7 @@ async def landing_page():
     return {"message" : " THis is the Landing Page"}
 
 
-@app.get("/books/{book_id}")
+@app.get("/books/{book_id}", status_code=status.HTTP_200_OK)
 async def get_book_by_id(book_id : int = Path(gt=0)):
     for book in BOOKS:
         if book_id == book.id:
@@ -29,7 +30,7 @@ async def get_book_by_id(book_id : int = Path(gt=0)):
             status_code=404,
             detail=f"No books with id as {book_id} was found."
         )
-@app.get("/books/")
+@app.get("/books/" , status_code=status.HTTP_200_OK)
 async def list_all_books(id:Optional[int] = Query(None, gt=0), 
                          title : Optional[str] = Query(None,min_length=3),
                          author : Optional[str] = None,
@@ -61,13 +62,13 @@ async def list_all_books(id:Optional[int] = Query(None, gt=0),
 
 
 
-@app.post("/books/addbook")
+@app.post("/books/addbook" , status_code=status.HTTP_201_CREATED)
 async def add_new_book(book : Book):
     BOOKS.append(checkbookid(book))    
     return book
 
 
-@app.put("/book/updatebook")
+@app.put("/book/updatebook", status_code=status.HTTP_202_ACCEPTED)
 async def update_book_detail(updatedbook : Book):
     for index,book in enumerate(BOOKS):
         if updatedbook.id == book.id:
@@ -76,7 +77,7 @@ async def update_book_detail(updatedbook : Book):
         
     return {"MESSAGE " : f"No Book with {updatedbook.id} was found."}
 
-@app.patch("/book/updatebook/{book_id}")
+@app.patch("/book/updatebook/{book_id}" , status_code=status.HTTP_202_ACCEPTED)
 async def update_specific_book_detail(book_id : int , patchbook : BookPatch):
     print(patchbook)
     for book in BOOKS:
@@ -99,7 +100,7 @@ async def update_specific_book_detail(book_id : int , patchbook : BookPatch):
         detail=f"No book with if {book_id} was found"
     )
 
-@app.delete("/book/deletebook/{bookid}")
+@app.delete("/book/deletebook/{bookid}", status_code=status.HTTP_202_ACCEPTED)
 async def delete_a_book(bookid : int):
     for index,book in enumerate(BOOKS):
         if book.id == bookid:
