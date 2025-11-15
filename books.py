@@ -1,5 +1,5 @@
-from fastapi import FastAPI, HTTPException
-# from pydantic import BaseModel, Field
+from fastapi import FastAPI, HTTPException, Path
+#from pydantic import BaseModel, Field
 from typing import List,Dict, Optional
 #from prometheus_fastapi_instrumentator import Instrumentator
 from models import Book, BOOKS, checkbookid, BookPatch
@@ -17,6 +17,18 @@ app = FastAPI(title="BOOKS API")
 async def landing_page():
     return {"message" : " THis is the Landing Page"}
 
+
+@app.get("/books/{book_id}")
+async def get_book_by_id(book_id : int = Path(gt=0)):
+    for book in BOOKS:
+        if book_id == book.id:
+            return book
+        
+    else:
+        raise HTTPException(
+            status_code=404,
+            detail=f"No books with id as {book_id} was found."
+        )
 @app.get("/books/")
 async def list_all_books(id:Optional[int] = None, title : Optional[str] = None,
                          author : Optional[str] = None,
