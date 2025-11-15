@@ -2,7 +2,7 @@ from fastapi import FastAPI, HTTPException
 # from pydantic import BaseModel, Field
 from typing import List,Dict, Optional
 #from prometheus_fastapi_instrumentator import Instrumentator
-from models import Book, BOOKS, checkbookid
+from models import Book, BOOKS, checkbookid, BookPatch
 
 app = FastAPI(title="BOOKS API")
 
