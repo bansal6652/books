@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException, Path
+from fastapi import FastAPI, HTTPException, Path , Query
 #from pydantic import BaseModel, Field
 from typing import List,Dict, Optional
 #from prometheus_fastapi_instrumentator import Instrumentator
@@ -30,7 +30,8 @@ async def get_book_by_id(book_id : int = Path(gt=0)):
             detail=f"No books with id as {book_id} was found."
         )
 @app.get("/books/")
-async def list_all_books(id:Optional[int] = None, title : Optional[str] = None,
+async def list_all_books(id:Optional[int] = Query(None, gt=0), 
+                         title : Optional[str] = Query(None,min_length=3),
                          author : Optional[str] = None,
                          tag : Optional[str] =None):
     if id is None and title is None and author is None and tag is None:
