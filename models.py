@@ -93,5 +93,9 @@ BOOKS : List[Book] = [
 ]
 
 def checkbookid(newbook : Book):
-    newbook.id = BOOKS[-1].id+1 if len(BOOKS)>0 else 1
+    if len(BOOKS) > 0 and BOOKS[-1].id is not None:
+        newbook.id = BOOKS[-1].id + 1
+    else:
+        newbook.id = 1
+    #newbook.id = BOOKS[-1].id+1 if len(BOOKS)>0 else 1
     return newbook
