@@ -3,7 +3,7 @@ from pydantic import BaseModel, Field, computed_field, field_validator , model_v
 
 class Book(BaseModel):
     # Added the unique integer ID field
-    id: Optional[int] = Field( description="ID is not needed on create",)
+    id: Optional[int] = Field(None, description="ID is not needed on create",)
     title : str = Field(... , min_length=3)
     author : str = Field(...)
     tags : List[str] = Field(...)
